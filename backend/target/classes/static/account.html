@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Account Settings - Booking History</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h2>Booking History</h2>
+
+  <div id="userInfo"></div>
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Slot</th>
+        <th>Car Number</th>
+        <th>Booked At</th>
+        <th>Arrived At</th>
+        <th>Departed At</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody id="bookingTableBody"></tbody>
+  </table>
+
+  <br>
+  <button onclick="logout()">Logout</button>
+  <a href="index.html">Back to Booking</a>
+
+  <script>
+    const BASE_URL = "http://localhost:8081";
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    if (!user) {
+      window.location.href = "login.html";
+    } else {
+      document.getElementById("userInfo").textContent = `Logged in as: ${user.mobileNumber}`;
+
+      fetch(`${BASE_URL}/api/bookings/user/${user.mobileNumber}`)
+        .then(res => res.json())
+        .then(bookings => {
+          const tbody = document.getElementById("bookingTableBody");
+          bookings.forEach(b => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+              <td>${b.slotName}</td>
+              <td>${b.carNumber}</td>
+              <td>${b.bookingTime || ''}</td>
+              <td>${b.arrivalTime || '-'}</td>
+              <td>${b.departureTime || '-'}</td>
+              <td>${b.status}</td>
+            `;
+            tbody.appendChild(row);
+          });
+        })
+        .catch(() => {
+          document.getElementById("userInfo").textContent = "Error loading booking history.";
+        });
+    }
+
+    function logout() {
+      localStorage.removeItem("user");
+      window.location.href = "login.html";
+    }
+  </script>
+</body>
+</html>

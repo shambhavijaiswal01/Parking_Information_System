@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Account Settings</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h2>Your Booking History</h2>
+
+  <input type="text" id="historyMobileInput" placeholder="Enter Mobile Number" />
+  <button onclick="fetchBookingHistory()">Get My Bookings</button>
+
+  <div id="historyResult"></div>
+
+  <a href="index.html">← Back to Home</a>
+      <button onclick="logoutUser()">Logout</button>
+
+
+
+  <script>
+    const BASE_URL = "http://localhost:8081";
+
+    function fetchBookingHistory() {
+      const mobile = document.getElementById("historyMobileInput").value.trim();
+      if (!mobile) {
+        document.getElementById("historyResult").innerHTML = "<p>Please enter your mobile number.</p>";
+        return;
+      }
+
+      fetch(`${BASE_URL}/api/bookings/user/${mobile}`)
+        .then(res => res.json())
+        .then(data => {
+          if (!data.length) {
+            document.getElementById("historyResult").innerHTML = "<p>No bookings found.</p>";
+            return;
+          }
+
+          let html = "<ul>";
+          data.forEach(b => {
+            html += `<li>
+              Slot: ${b.slotName} |
+              Car: ${b.carNumber} |
+              Status: ${b.status} |
+              Booked: ${b.bookingTime?.replace("T", " ").slice(0, 16)} |
+              Arrived: ${b.arrivalTime ? b.arrivalTime.replace("T", " ").slice(0, 16) : "N/A"} |
+              Departed: ${b.departureTime ? b.departureTime.replace("T", " ").slice(0, 16) : "N/A"}
+            </li>`;
+          });
+          html += "</ul>";
+          document.getElementById("historyResult").innerHTML = html;
+        })
+        .catch(() => {
+          document.getElementById("historyResult").innerHTML = "<p>Error fetching bookings.</p>";
+        });
+    }
+    function logoutUser() {
+    localStorage.removeItem("loggedInUser");
+    alert("You have been logged out.");
+    window.location.href = "login.html"; // Redirect to homepage or login
+  }
+
+
+  </script>
+</body>
+</html>

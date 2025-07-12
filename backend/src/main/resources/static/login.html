@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - Parking System</title>
+  <style>
+    body { font-family: Arial; padding: 20px; background-color: #f3f3f3; }
+    h2 { color: #333; }
+    input, button {
+      padding: 10px;
+      margin: 8px 0;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    #loginStatus { color: red; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h2>User Login</h2>
+
+  <input type="text" id="loginMobile" placeholder="Mobile Number" />
+  <input type="password" id="loginPassword" placeholder="Password" />
+  <button onclick="loginUser()">Login</button>
+
+
+  <p id="loginStatus"></p>
+
+  <p>Don't have an account? <a href="signup.html">Sign up here</a></p>
+
+
+  <script>
+    function loginUser() {
+      const mobile = document.getElementById("loginMobile").value;
+      const password = document.getElementById("loginPassword").value;
+
+      if (!mobile || !password) {
+        document.getElementById("loginStatus").textContent = "Please enter both fields.";
+        return;
+      }
+
+      fetch(`http://localhost:8081/api/auth/login?mobileNumber=${mobile}&password=${password}`, {
+        method: 'POST'
+      })
+      .then(res => {
+        if (res.ok) return res.text();
+        throw new Error("Invalid credentials");
+      })
+      .then(msg => {
+        localStorage.setItem("userMobile", mobile); //  save session
+        alert(msg);
+        window.location.href = "index.html"; // redirect to booking page
+      })
+      .catch(err => {
+        document.getElementById("loginStatus").textContent = err.message;
+      });
+    }
+  
+  </script>
+</body>
+</html>

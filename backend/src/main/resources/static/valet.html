@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Valet Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h2>Valet Dashboard</h2>
+
+  <input type="text" id="valetCarInput" placeholder="Enter Car Number" />
+
+  <button onclick="markArrival()">Mark Arrival</button>
+  <button onclick="markDeparture()">Mark Departure</button>
+
+  <p id="valetStatus"></p>
+
+  <a href="index.html">← Back to Home</a>
+
+  <script>
+    const BASE_URL = "http://localhost:8081";
+
+    function markArrival() {
+      const car = document.getElementById("valetCarInput").value.trim();
+      if (!car) {
+        valetStatus.textContent = "Please enter car number.";
+        return;
+      }
+
+      fetch(`${BASE_URL}/api/bookings/arrive?carNumber=${car}`, { method: "POST" })
+        .then(res => res.text())
+        .then(msg => valetStatus.textContent = msg)
+        .catch(err => {
+          console.error(err);
+          valetStatus.textContent = "Error marking arrival.";
+        });
+    }
+
+    function markDeparture() {
+      const car = document.getElementById("valetCarInput").value.trim();
+      if (!car) {
+        valetStatus.textContent = "Please enter car number.";
+        return;
+      }
+
+      fetch(`${BASE_URL}/api/bookings/depart?carNumber=${car}`, { method: "POST" })
+        .then(res => res.text())
+        .then(msg => valetStatus.textContent = msg)
+        .catch(err => {
+          console.error(err);
+          valetStatus.textContent = "Error marking departure.";
+        });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Parking Booking</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h2>Book a Parking Slot</h2>
+
+  <!-- 👤 Show login status -->
+  <div id="loginStatus" style="margin: 10px 0; font-weight: bold; color: green;"></div>
+
+  <label>City:</label>
+  <select id="cityDropdown"><option>Select City</option></select><br/>
+
+  <label>Area:</label>
+  <select id="areaDropdown"><option>Select city first</option></select><br/>
+
+  <label>Hub:</label>
+  <select id="hubDropdown"><option>Select area first</option></select><br/>
+
+  <label>Available Slots:</label>
+  <select id="slotDropdown"><option>Select hub first</option></select><br/>
+
+  <input type="text" id="mobileInput" placeholder="Mobile Number" />
+  <input type="text" id="carInput" placeholder="Car Number" />
+  <button id="bookBtn" onclick="bookSlot()">Book Slot</button>
+
+  <p id="status"></p>
+
+  <!-- 📜 Booking History Section -->
+  <div id="history" style="margin-top: 20px;"></div>
+
+  <br/><br/>
+  <a href="login.html">Login</a> |
+  <a href="signup.html">Signup</a> |
+  <a href="valet.html">Valet</a> |
+  <a href="settings.html">Settings</a>
+
+  <script src="script.js"></script>
+</body>
+</html>
